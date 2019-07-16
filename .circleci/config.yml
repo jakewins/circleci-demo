@@ -4,14 +4,7 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/node:7.10
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
     working_directory: ~/repo
 
     steps:
@@ -33,3 +26,39 @@ jobs:
 
       # run tests!
       - run: yarn test
+
+  deploy-staging:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: echo "This would deploy to staging"
+
+  deploy-prod:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: echo "This would deploy to prod"
+
+workflows:
+  version: 2
+
+  build-and-deploy:
+    jobs:
+      - build:
+          # We only run this workflow when things are committed to master.
+          filters:
+            branches:
+              only: master
+      - deploy-to-staging: # Deploys to staging if build is green
+          requires: ["build"]
+      - hold: # Require manual action to pass this step
+          type: approval
+          requires: ["build"]
+      - deploy-to-prod: # Deploys to prod
+          requires: ["hold"]
