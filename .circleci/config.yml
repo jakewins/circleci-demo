@@ -62,3 +62,11 @@ workflows:
           requires: ["build"]
       - deploy-to-prod: # Deploys to prod
           requires: ["hold"]
+
+  pr-build:
+    jobs:
+      - build:
+          # No need to run this on master, since it's covered by the build-and-deploy flow
+          filters:
+            branches:
+              ignore: master
