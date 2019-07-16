@@ -27,7 +27,7 @@ jobs:
       # run tests!
       - run: yarn test
 
-  deploy-staging:
+  deploy-to-staging:
     docker:
       - image: circleci/node:7.10
     working_directory: ~/repo
@@ -36,7 +36,7 @@ jobs:
       - checkout
       - run: echo "This would deploy to staging"
 
-  deploy-prod:
+  deploy-to-prod:
     docker:
       - image: circleci/node:7.10
     working_directory: ~/repo
